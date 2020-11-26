@@ -10,6 +10,9 @@
 class ray {
     public:
         ray() {}
+        ///
+        /// \param origin ray origin point
+        /// \param direction ray direction
         ray(const point3& origin, const vec3& direction)
             : orig(origin), dir(direction)
         {}
