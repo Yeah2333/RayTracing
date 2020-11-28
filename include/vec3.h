@@ -148,6 +148,14 @@ vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
 
 }
 
+vec3 random_in_unit_disk() {
+    while(true) {
+        auto p = vec3(random_double(-1,1),random_double(-1,1),0);
+        if (p.length_squared() >= 1)
+            continue;
+        return p;
+    }
+}
 using point3 = vec3;   // 3D point
 using color = vec3;    // RGB color
 
