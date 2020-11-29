@@ -19,8 +19,8 @@ hittable_list random_scene();
 color ray_color(const ray& r, const hittable& world, int depth) ;
 void raytracing_thread(int k);
 
-const auto aspect_ratio = 3.0 / 2.0;  //image width/height
-const int image_width = 1200;
+const auto aspect_ratio = 21.0 / 9.0;  //image width/height
+const int image_width = 1440;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
 const int samples_per_pixel = 500;
 const int max_depth = 50;
@@ -39,6 +39,10 @@ auto aperture = 0.1;
 camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
 int thread_num = 48;
+
+vector<vector<color>> image_file;
+
+
 
 int main() {
 //    // Image
@@ -63,20 +67,31 @@ int main() {
 
     // Render
 
-    std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+    //std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+    image_file.resize(image_width);
 
-
+    for (auto &u : image_file) {
+        u.resize(image_height);
+    }
 
     std::vector<std::thread> threads;
     for (int k = 0; k < thread_num ; ++k) {
         threads.push_back(std::thread(raytracing_thread,k));
     }
-    for (auto &thread : threads) {
-        thread.join();
-
+    for (auto &u:threads) {
+        u.join();
     }
 
 
+    std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+    for (int j=image_height-1; j>=0;j--) {
+        for (int i = 0; i<image_width;i++) {
+            std::cout << image_file[i][j].x() << " "
+                << image_file[i][j].y()  << " "
+                << image_file[i][j].z()   << "\n";
+
+        }
+    }
 
 //    for (int j = image_height - 1; j >= 0; --j) {
 //        std::cerr << "\rScanlines remaining: " << j << " " << std::flush;
@@ -179,7 +194,7 @@ hittable_list random_scene() {
 
 void raytracing_thread(int k ){
 
-    for (int j = image_height - k; j >= 0; j-=thread_num){
+    for (int j = image_height - k - 1 ; j >= 0; j -= thread_num ){
         std::cerr << "\rScanlines remaining: " << j << " " << std::flush;
         for (int i = 0; i < image_width; ++i) {
             color pixel_color(0, 0, 0);
@@ -191,7 +206,8 @@ void raytracing_thread(int k ){
                 pixel_color += ray_color(r, world, max_depth);
             }
 
-            write_color(std::cout, pixel_color, samples_per_pixel);
+            //write_color(std::cout,pixel_color,samples_per_pixel);
+            write_image(image_file, i, j, pixel_color, samples_per_pixel);
         }
 
     }
