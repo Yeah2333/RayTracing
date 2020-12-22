@@ -1,0 +1,1 @@
+/usr/bin/c++   -O2 -pthread  -O3 -DNDEBUG  -rdynamic CMakeFiles/main.dir/src/main.cpp.o  -o main 

@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -pthread ")
 set( CMAKE_CXX_STANDARD 11)
 
 include_directories(include)
+include(cmake/stb.cmake)
 
 
-add_executable(main main.cpp)
+add_executable(main src/main.cpp)
